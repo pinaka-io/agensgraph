@@ -1,70 +1,80 @@
 # AgensGraph Multiplatform Images
 
-This repository builds and publishes multiplatform Docker images for AgensGraph.
+[![Build Status](https://github.com/pinaka-io/agensgraph/actions/workflows/build-multiplatform.yml/badge.svg)](https://github.com/pinaka-io/agensgraph/actions/workflows/build-multiplatform.yml)
 
-## Purpose
+Multiplatform Docker images for [AgensGraph](https://github.com/skaiworldwide-oss/agensgraph), a graph database extension for PostgreSQL.
 
-The upstream AgensGraph images at [skaiworldwide/agensgraph](https://hub.docker.com/r/skaiworldwide/agensgraph) only provide AMD64 architecture support. This repository extends support to multiple platforms including ARM64, enabling AgensGraph to run on a wider range of hardware platforms such as Apple Silicon and ARM-based servers.
+## Why This Repository?
 
-## Supported Platforms
+The upstream AgensGraph images at [skaiworldwide/agensgraph](https://hub.docker.com/r/skaiworldwide/agensgraph) **only support AMD64**. This repository provides:
 
-- linux/amd64
-- linux/arm64
+✅ **Multi-architecture support** - linux/amd64, linux/arm64
+✅ **Apple Silicon compatibility** - Native ARM64 builds
+✅ **Automated builds** - CI/CD pipeline with version tracking
+✅ **Developer tooling** - Taskfile for local development
+
+## Quick Start
+
+```bash
+# Pull and run the latest version
+docker pull ghcr.io/pinaka-io/agensgraph:v2.16.0
+docker run -d \
+  --name agensgraph \
+  -e POSTGRES_PASSWORD=mysecretpassword \
+  -p 5432:5432 \
+  ghcr.io/pinaka-io/agensgraph:v2.16.0
+
+# Connect with psql
+docker exec -it agensgraph psql -U postgres
+```
 
 ## Available Versions
 
-This repository tracks the official upstream releases from [skaiworldwide-oss/agensgraph](https://github.com/skaiworldwide-oss/agensgraph).
+This repository tracks official upstream releases from [skaiworldwide-oss/agensgraph](https://github.com/skaiworldwide-oss/agensgraph/releases).
 
 **Current latest**: v2.16.0
 
-For all available versions, see: https://github.com/skaiworldwide-oss/agensgraph/releases
-
-## Setup
-
-### GitHub Actions Secrets
-
-To enable automated builds and publishing, configure the following secrets in your GitHub repository:
-
-**Required:**
-- `GITHUB_TOKEN` - Automatically provided by GitHub Actions
-
-**Optional (for Docker Hub publishing):**
-- `DOCKERHUB_USERNAME` - Your Docker Hub username
-- `DOCKERHUB_TOKEN` - Docker Hub access token
-
-### Container Registries
-
-Images are automatically published to:
-- **GitHub Container Registry (GHCR)**: `ghcr.io/<your-username>/agensgraph`
-- **Docker Hub** (if credentials configured): `<dockerhub-username>/agensgraph`
+All released images: [ghcr.io/pinaka-io/agensgraph](https://github.com/pinaka-io/agensgraph/pkgs/container/agensgraph)
 
 ## Usage
 
-Pull the image for your platform:
+### Pull the Image
 
 ```bash
-# From GitHub Container Registry
-docker pull ghcr.io/<your-username>/agensgraph:latest
+# Specific version (recommended)
+docker pull ghcr.io/pinaka-io/agensgraph:v2.16.0
 
-# From Docker Hub (if published)
-docker pull <dockerhub-username>/agensgraph:latest
+# Or get the latest
+docker pull ghcr.io/pinaka-io/agensgraph:latest
 ```
 
-Run AgensGraph:
+### Run AgensGraph
 
 ```bash
 docker run -d \
   --name agensgraph \
   -e POSTGRES_PASSWORD=mysecretpassword \
   -p 5432:5432 \
-  ghcr.io/<your-username>/agensgraph:latest
+  ghcr.io/pinaka-io/agensgraph:v2.16.0
 ```
 
-## Building Locally
+### Connect to AgensGraph
+
+```bash
+# Using psql
+docker exec -it agensgraph psql -U postgres
+
+# Check AgensGraph version
+docker exec -it agensgraph psql -U postgres -c "SELECT version();"
+```
+
+## Local Development
 
 ### Using Task (Recommended)
 
-First, install [Task](https://taskfile.dev/):
+This repository includes a comprehensive [Taskfile](https://taskfile.dev/) with 27 tasks for building, testing, and managing Docker images.
+
+**Install Task:**
 
 ```bash
 # macOS
@@ -77,46 +87,108 @@ sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/b
 go install github.com/go-task/task/v3/cmd/task@latest
 ```
 
-Then use the provided Taskfile:
+**Common Tasks:**
 
 ```bash
-# Quick build for current platform
-task build
-
 # Build and test
-task test
+task build                      # Build for current platform
+task test                       # Run basic tests
+task test:full                  # Full integration tests
+task verify                     # Complete verification
 
 # Run locally
-task run
+task run                        # Start container on port 5432
+task psql                       # Connect with psql
+task logs                       # View container logs
+task stop                       # Stop and remove container
 
-# Build specific version
-task build:version -- v2.15.0
+# Multiplatform builds
+task build:multiplatform        # Build for amd64 and arm64
+task build:version -- v2.15.0   # Build specific version
 
-# See all available tasks
-task --list
-task help
+# Version management
+task tag:create -- v2.17.0      # Create and push new tag
+task check:upstream             # Check upstream releases
+task check:builds               # Check CI/CD status
+
+# Help
+task --list                     # List all 27 tasks
+task help                       # Detailed help
 ```
 
-### Using Docker directly
+### Using Docker Directly
 
-Build for current platform:
+**Single platform:**
 ```bash
 docker build --build-arg AGENSGRAPH_VERSION=v2.16.0 -t agensgraph:latest .
 ```
 
-Build multiplatform:
+**Multiplatform:**
 ```bash
 docker buildx create --use
-docker buildx build --platform linux/amd64,linux/arm64 -t agensgraph:latest .
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  --build-arg AGENSGRAPH_VERSION=v2.16.0 \
+  -t agensgraph:latest \
+  .
 ```
 
 **Note**: Always use official upstream versions from https://github.com/skaiworldwide-oss/agensgraph/releases
 
-## Automated Builds
+## CI/CD Pipeline
 
-The GitHub Actions workflow automatically builds and pushes images:
-- On version tags (e.g., `v2.16.0`) - builds matching AgensGraph version
-- On GitHub releases
-- Manual trigger via workflow dispatch
+Images are automatically built and published via GitHub Actions:
 
-The workflow automatically detects the version from the Git tag and builds that specific AgensGraph version.
+**Triggers:**
+- Version tags (e.g., `v2.16.0`) → builds matching AgensGraph version
+- GitHub releases → builds and publishes
+- Manual workflow dispatch → on-demand builds
+
+**Build Process:**
+1. Parallel builds for linux/amd64 and linux/arm64 using QEMU
+2. Compiles AgensGraph from source for each platform
+3. Creates multi-arch manifest
+4. Publishes to GitHub Container Registry (GHCR)
+
+**Tags Created:**
+- `vX.Y.Z` - Full semantic version (e.g., `v2.16.0`)
+- `vX.Y` - Major.minor (e.g., `v2.16`)
+- `vX` - Major version (e.g., `v2`)
+
+Check build status: [GitHub Actions](https://github.com/pinaka-io/agensgraph/actions)
+
+## Repository Structure
+
+```
+.
+├── Dockerfile                     # Multiplatform build with version arg
+├── Taskfile.yaml                  # Task runner (27 tasks)
+├── .github/workflows/
+│   └── build-multiplatform.yml   # CI/CD pipeline
+├── CLAUDE.md                      # Detailed project documentation
+└── README.md                      # This file
+```
+
+## Contributing
+
+1. **Check upstream releases**: Always verify version exists at https://github.com/skaiworldwide-oss/agensgraph/releases
+2. **Create a tag**: `task tag:create -- vX.Y.Z`
+3. **Monitor build**: `task check:builds` or `task watch:build`
+4. **Test locally**: `task build && task test:full`
+
+## Documentation
+
+- **[CLAUDE.md](./CLAUDE.md)** - Comprehensive project documentation, architecture, workflows, and troubleshooting
+- **[Taskfile.yaml](./Taskfile.yaml)** - All available development tasks
+- **[Upstream Releases](https://github.com/skaiworldwide-oss/agensgraph/releases)** - Official AgensGraph versions
+
+## Links
+
+- **Images**: [ghcr.io/pinaka-io/agensgraph](https://github.com/pinaka-io/agensgraph/pkgs/container/agensgraph)
+- **Source**: [github.com/pinaka-io/agensgraph](https://github.com/pinaka-io/agensgraph)
+- **Upstream**: [github.com/skaiworldwide-oss/agensgraph](https://github.com/skaiworldwide-oss/agensgraph)
+- **Build Status**: [GitHub Actions](https://github.com/pinaka-io/agensgraph/actions)
+
+## License
+
+This repository follows the same license as the upstream AgensGraph project.

@@ -25,12 +25,47 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 ```
 .
 ├── Dockerfile                          # Multiplatform Dockerfile with version argument
-├── Taskfile.yaml                      # Task runner for local development
+├── Taskfile.yaml                      # Task runner (27 tasks for dev workflow)
 ├── .github/workflows/
-│   └── build-multiplatform.yml        # GitHub Actions workflow for CI/CD
+│   └── build-multiplatform.yml        # GitHub Actions CI/CD pipeline
 ├── CLAUDE.md                          # Context file for Claude (this file)
-└── README.md                          # User documentation
+├── README.md                          # User-facing documentation
+└── .claude/                           # Claude-specific configs (if any)
 ```
+
+### File Descriptions
+
+**Dockerfile**
+- Accepts `AGENSGRAPH_VERSION` build argument (defaults to v2.16.0)
+- Based on postgres:16-bookworm
+- Installs build dependencies and compiles AgensGraph from source
+- Supports multiplatform builds via Docker Buildx
+
+**Taskfile.yaml**
+- 27 tasks organized into categories (build, test, run, version management, cleanup)
+- Uses Task v3 syntax with proper shell operator handling
+- Primary interface for local development
+- Includes upstream checking and CI/CD monitoring tasks
+
+**.github/workflows/build-multiplatform.yml**
+- Matrix strategy for parallel builds (amd64, arm64)
+- Digest-based approach for true multiplatform images
+- Version extraction from Git tags
+- GHCR publishing with semantic versioning
+- Requires `packages: write` permission
+
+**CLAUDE.md (this file)**
+- Project overview and architecture
+- Development workflows and best practices
+- Troubleshooting guide
+- Historical context and decision rationale
+- Updated after every significant change
+
+**README.md**
+- User-facing quick start guide
+- Installation and usage instructions
+- Link to detailed documentation (this file)
+- Public-facing project description
 
 ## Current Status
 
@@ -148,6 +183,45 @@ Required for pushing images to GitHub Container Registry (GHCR).
 
 ### Docker Hub
 Docker Hub publishing has been removed from the workflow to simplify the setup. GHCR is sufficient for public distribution.
+
+## Project Summary
+
+### What This Repository Does
+1. **Builds multiplatform Docker images** for AgensGraph (amd64 + arm64)
+2. **Tracks upstream versions** from skaiworldwide-oss/agensgraph
+3. **Automates publishing** to GitHub Container Registry via GitHub Actions
+4. **Provides developer tooling** via Taskfile with 27 tasks
+5. **Maintains documentation** in CLAUDE.md and README.md
+
+### Key Features
+- ✅ Apple Silicon (ARM64) native support
+- ✅ Automated CI/CD pipeline with version extraction
+- ✅ Developer-friendly Taskfile for local workflows
+- ✅ Semantic versioning with Git tags
+- ✅ Build caching for faster iterations
+- ✅ Comprehensive documentation and troubleshooting
+
+### Current State (2026-03-24)
+- **Latest Version**: v2.16.0 (building)
+- **Platforms**: linux/amd64, linux/arm64
+- **Registry**: ghcr.io/pinaka-io/agensgraph
+- **Build Method**: Compile from source per platform
+- **Workflow Status**: Tag-triggered, no main branch builds
+- **Development Tools**: Taskfile with 27 tasks
+
+### Known Limitations
+- Build time is 20-40 minutes due to source compilation
+- ARM64 builds are slower due to QEMU emulation
+- No Docker Hub publishing (removed for simplicity)
+- Requires manual tag creation for new releases
+- No automatic upstream version detection
+
+### Future Improvements
+- Consider caching compiled binaries
+- Add automated upstream version checking
+- Implement release notes generation
+- Add health checks to Docker image
+- Consider multi-stage builds for smaller images
 
 ## Development Guidelines
 

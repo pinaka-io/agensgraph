@@ -80,19 +80,30 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 - **Container Images**: https://github.com/pinaka-io/agensgraph/pkgs/container/agensgraph
 
 ### Recent Changes (2026-03-24)
-1. **Added Taskfile.yaml** (commit 5efef92)
+1. **Simplified Docker tags** (latest)
+   - Only generate full semantic version tags (vX.Y.Z)
+   - Removed major/minor aliases (vX.Y, vX) for clarity
+   - Removed latest tag to ensure explicit versioning
+   - Prevents confusion with multiple tag aliases
+
+2. **Added Taskfile.yaml** (commit 5efef92)
    - Comprehensive task runner for local development
    - 27 tasks for building, testing, running, and managing containers
    - Includes version management and upstream checking tasks
 
-2. **Fixed Taskfile syntax** (commit 8becbd5)
+3. **Fixed Taskfile syntax** (commit 8becbd5)
    - Resolved YAML parsing issues with shell operators
    - Fixed echo commands with colons
    - Properly escaped awk commands
 
-3. **Added documentation for Task installation**
+4. **Added documentation for Task installation**
    - Installation instructions for macOS, Linux, and Go
    - Updated README and CLAUDE.md with Taskfile usage
+
+5. **Major documentation update** (commit 9da31c9)
+   - Modernized README with Quick Start and badges
+   - Added Project Summary to CLAUDE.md
+   - Documented known limitations and future improvements
 
 ### Workflow History
 - Initial workflow had syntax errors (invalid Docker Hub references, artifact naming issues)
@@ -176,10 +187,9 @@ Required for pushing images to GitHub Container Registry (GHCR).
 - **Image Location**: `ghcr.io/pinaka-io/agensgraph`
 - **Visibility**: Public (matches repository visibility)
 - **Tags Generated**:
-  - `vX.Y.Z` - Semantic version matching Git tag (e.g., `v2.16.0`)
-  - `vX.Y` - Major.minor version (e.g., `v2.16`)
-  - `vX` - Major version (e.g., `v2`)
-  - `latest` - Latest build from default branch (currently disabled since we don't build on main)
+  - `vX.Y.Z` - Full semantic version only (e.g., `v2.16.0`)
+  - Only exact version tags are created (no major/minor aliases)
+  - No `latest` tag (ensures reproducible builds with explicit versions)
 
 ### Docker Hub
 Docker Hub publishing has been removed from the workflow to simplify the setup. GHCR is sufficient for public distribution.

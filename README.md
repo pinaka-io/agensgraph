@@ -151,9 +151,7 @@ Images are automatically built and published via GitHub Actions:
 4. Publishes to GitHub Container Registry (GHCR)
 
 **Tags Created:**
-- `vX.Y.Z` - Full semantic version (e.g., `v2.16.0`)
-- `vX.Y` - Major.minor (e.g., `v2.16`)
-- `vX` - Major version (e.g., `v2`)
+- `vX.Y.Z` - Full semantic version only (e.g., `v2.16.0`)
 
 Check build status: [GitHub Actions](https://github.com/pinaka-io/agensgraph/actions)
 

@@ -1,5 +1,13 @@
 # AgensGraph Multiplatform Docker Images
 
+**IMPORTANT**: This context file (CLAUDE.md) should be updated after every significant change or request to keep the documentation current and accurate. Always update this file when:
+- Making changes to the repository structure
+- Modifying workflows or build processes
+- Adding new features or tasks
+- Fixing bugs or issues
+- Releasing new versions
+- Learning new information about the project
+
 ## Project Overview
 
 This repository builds and publishes multiplatform Docker images for AgensGraph, a graph database extension for PostgreSQL. The upstream project at https://hub.docker.com/r/skaiworldwide/agensgraph only provides AMD64 images, so this repository extends support to ARM64 and other platforms.
@@ -28,11 +36,28 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 
 ### Released Versions
 - **v2.16.0**: Initial release with multiplatform support (linux/amd64, linux/arm64)
+  - Currently building after re-tagging with latest changes
+  - Build run: https://github.com/pinaka-io/agensgraph/actions/runs/23505661585
 
 ### Repository
 - **Organization**: https://github.com/pinaka-io
 - **Repository**: https://github.com/pinaka-io/agensgraph
 - **Container Images**: https://github.com/pinaka-io/agensgraph/pkgs/container/agensgraph
+
+### Recent Changes (2026-03-24)
+1. **Added Taskfile.yaml** (commit 5efef92)
+   - Comprehensive task runner for local development
+   - 27 tasks for building, testing, running, and managing containers
+   - Includes version management and upstream checking tasks
+
+2. **Fixed Taskfile syntax** (commit 8becbd5)
+   - Resolved YAML parsing issues with shell operators
+   - Fixed echo commands with colons
+   - Properly escaped awk commands
+
+3. **Added documentation for Task installation**
+   - Installation instructions for macOS, Linux, and Go
+   - Updated README and CLAUDE.md with Taskfile usage
 
 ### Workflow History
 - Initial workflow had syntax errors (invalid Docker Hub references, artifact naming issues)
@@ -40,6 +65,8 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 - Added package permissions in commit 16ccc07
 - Changed triggers to tags/releases only in commit cddb307
 - Made version dynamic based on Git tags in commit 5075f02
+- Added comprehensive context documentation in commit 7fbb60c
+- Retagged v2.16.0 to include all fixes
 
 ## Key Technologies
 
@@ -155,7 +182,7 @@ Available upstream versions include: v2.16.0 (latest), v2.15.0, v2.14.1, v2.13.1
 
 ## Local Development with Taskfile
 
-This repository includes a Taskfile.yaml for streamlined local development. [Task](https://taskfile.dev/) is a task runner similar to Make but uses YAML.
+This repository includes a Taskfile.yaml for streamlined local development. [Task](https://taskfile.dev/) is a task runner similar to Make but uses YAML. The Taskfile provides 27 tasks organized into categories for building, testing, running, and managing the Docker images.
 
 ### Installing Task
 
@@ -177,29 +204,44 @@ go install github.com/go-task/task/v3/cmd/task@latest
 task build              # Build for current platform
 task test               # Build and run tests
 task test:full          # Full integration tests
+task verify             # Complete verification
 
 # Run locally
 task run                # Start container on port 5432
 task psql               # Connect with psql
+task shell              # Open bash shell
 task logs               # View logs
 task stop               # Stop and remove container
 
 # Multiplatform
 task build:multiplatform   # Build for amd64 and arm64
+task build:push            # Build and push to registry
 
 # Version management
 task build:version -- v2.15.0  # Build specific version
 task tag:create -- v2.16.0     # Create and push tag
+task tag:delete -- v2.16.0     # Delete tag
 task check:upstream            # Check upstream releases
+task check:builds              # Check GitHub Actions status
+task watch:build               # Watch latest build
 
 # Cleanup
 task clean              # Remove built images
+task clean:test         # Remove test containers
 task clean:all          # Remove everything
 
 # Help
 task --list            # List all tasks
 task help              # Detailed help
 ```
+
+### Taskfile Best Practices
+
+- **All shell operators (`||`, `&&`)** must be wrapped in `sh -c` or use multi-line blocks
+- **Echo commands with colons** must be quoted to avoid YAML key-value parsing
+- **Pipeline commands** should properly escape variables (especially in awk)
+- Use `task --list` to see all available tasks
+- Use `task help` for detailed command examples
 
 ## Common Tasks
 

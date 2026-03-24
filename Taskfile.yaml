@@ -29,14 +29,14 @@ tasks:
   build:multiplatform:
     desc: Build multiplatform Docker image (requires buildx)
     cmds:
-      - docker buildx create --use --name multiplatform-builder || true
+      - sh -c 'docker buildx create --use --name multiplatform-builder || true'
       - docker buildx build --platform {{.PLATFORMS}} --build-arg AGENSGRAPH_VERSION={{.AGENSGRAPH_VERSION}} -t {{.IMAGE_NAME}}:{{.VERSION}} --load .
       - echo "Built multiplatform {{.IMAGE_NAME}}:{{.VERSION}}"
 
   build:push:
     desc: Build and push multiplatform image to registry
     cmds:
-      - docker buildx create --use --name multiplatform-builder || true
+      - sh -c 'docker buildx create --use --name multiplatform-builder || true'
       - docker buildx build --platform {{.PLATFORMS}} --build-arg AGENSGRAPH_VERSION={{.AGENSGRAPH_VERSION}} -t {{.REGISTRY}}/{{.IMAGE_NAME}}:{{.VERSION}} --push .
 
   test:
@@ -45,7 +45,8 @@ tasks:
     cmds:
       - echo "Testing {{.IMAGE_NAME}}:{{.VERSION}}..."
       - docker run --rm {{.IMAGE_NAME}}:{{.VERSION}} postgres --version
-      - docker run --rm {{.IMAGE_NAME}}:{{.VERSION}} agens --version || echo "Warning: agens command not in PATH"
+      - |
+        docker run --rm {{.IMAGE_NAME}}:{{.VERSION}} agens --version || echo "Warning: agens command not in PATH"
       - echo "✓ Basic tests passed"
 
   test:full:
@@ -58,7 +59,8 @@ tasks:
       - echo "Testing PostgreSQL connection..."
       - docker exec agensgraph-test psql -U postgres -c "SELECT version();"
       - echo "Testing AgensGraph functionality..."
-      - docker exec agensgraph-test psql -U postgres -c "LOAD 'age';" || echo "Warning: AGE extension not loaded"
+      - |
+        docker exec agensgraph-test psql -U postgres -c "LOAD 'age';" || echo "Warning: AGE extension not loaded"
       - echo "✓ Integration tests passed"
       - task: clean:test
 
@@ -66,12 +68,12 @@ tasks:
     desc: Run AgensGraph container locally
     cmds:
       - docker run -d --name agensgraph-local -e POSTGRES_PASSWORD=mypassword -p 5432:5432 {{.IMAGE_NAME}}:{{.VERSION}}
-      - echo "AgensGraph running at localhost:5432"
-      - echo "Username: postgres"
-      - echo "Password: mypassword"
+      - 'echo "AgensGraph running at localhost:5432"'
+      - 'echo "Username: postgres"'
+      - 'echo "Password: mypassword"'
       - echo ""
-      - echo "Connect with: docker exec -it agensgraph-local psql -U postgres"
-      - echo "Stop with: task stop"
+      - 'echo "Connect with: docker exec -it agensgraph-local psql -U postgres"'
+      - 'echo "Stop with: task stop"'
 
   run:interactive:
     desc: Run AgensGraph container interactively
@@ -97,30 +99,30 @@ tasks:
   stop:
     desc: Stop running AgensGraph container
     cmds:
-      - docker stop agensgraph-local || true
-      - docker rm agensgraph-local || true
+      - sh -c 'docker stop agensgraph-local || true'
+      - sh -c 'docker rm agensgraph-local || true'
       - echo "Stopped agensgraph-local"
 
   clean:test:
     desc: Clean up test containers
     cmds:
-      - docker stop agensgraph-test 2>/dev/null || true
-      - docker rm agensgraph-test 2>/dev/null || true
+      - sh -c 'docker stop agensgraph-test 2>/dev/null || true'
+      - sh -c 'docker rm agensgraph-test 2>/dev/null || true'
 
   clean:
     desc: Remove built images and containers
     cmds:
       - task: stop
       - task: clean:test
-      - docker rmi {{.IMAGE_NAME}}:{{.VERSION}} || true
+      - sh -c 'docker rmi {{.IMAGE_NAME}}:{{.VERSION}} || true'
       - docker builder prune -f
 
   clean:all:
     desc: Remove all agensgraph images and build cache
     cmds:
-      - docker ps -a | grep agensgraph | awk '{print $1}' | xargs docker stop || true
-      - docker ps -a | grep agensgraph | awk '{print $1}' | xargs docker rm || true
-      - docker images | grep agensgraph | awk '{print $3}' | xargs docker rmi || true
+      - sh -c 'docker ps -a | grep agensgraph | awk "{print \$1}" | xargs docker stop || true'
+      - sh -c 'docker ps -a | grep agensgraph | awk "{print \$1}" | xargs docker rm || true'
+      - sh -c 'docker images | grep agensgraph | awk "{print \$3}" | xargs docker rmi || true'
       - docker buildx prune -af
 
   inspect:
@@ -172,8 +174,8 @@ tasks:
           echo "Usage: task tag:delete -- v2.16.0"
           exit 1
         fi
-        git tag -d {{.CLI_ARGS}} || true
-        git push origin --delete {{.CLI_ARGS}} || true
+        git tag -d {{.CLI_ARGS}} 2>/dev/null || true
+        git push origin --delete {{.CLI_ARGS}} 2>/dev/null || true
         echo "Deleted tag {{.CLI_ARGS}}"
 
   check:upstream:

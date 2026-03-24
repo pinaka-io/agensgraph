@@ -4,6 +4,14 @@
 
 This repository builds and publishes multiplatform Docker images for AgensGraph, a graph database extension for PostgreSQL. The upstream project at https://hub.docker.com/r/skaiworldwide/agensgraph only provides AMD64 images, so this repository extends support to ARM64 and other platforms.
 
+## Upstream Information
+
+- **Source Repository**: https://github.com/skaiworldwide-oss/agensgraph
+- **Official Releases**: https://github.com/skaiworldwide-oss/agensgraph/releases
+- **Latest Version**: v2.16.0 (as of 2025-09-12)
+
+**IMPORTANT**: Always use official upstream release versions. Check the releases page before creating new tags.
+
 ## Repository Structure
 
 ```
@@ -68,15 +76,22 @@ Requires repository secrets:
 - Pin AgensGraph version in git clone command
 
 ### Updating AgensGraph Version
+
+**CRITICAL**: Always check the upstream releases first: https://github.com/skaiworldwide-oss/agensgraph/releases
+
 To release a new AgensGraph version:
-1. Create and push a git tag matching the AgensGraph version (e.g., `v2.17.0`)
+1. Verify the version exists in upstream releases
+2. Create and push a git tag matching the exact AgensGraph version
    ```bash
-   git tag -a v2.17.0 -m "Release AgensGraph v2.17.0"
-   git push origin v2.17.0
+   # Example: Building v2.15.0
+   git tag -a v2.15.0 -m "Release AgensGraph v2.15.0"
+   git push origin v2.15.0
    ```
-2. The workflow will automatically build that specific AgensGraph version
-3. The Dockerfile accepts `AGENSGRAPH_VERSION` as a build argument (defaults to v2.16.0)
-4. Test locally with: `docker build --build-arg AGENSGRAPH_VERSION=v2.17.0 -t agensgraph:test .`
+3. The workflow will automatically build that specific AgensGraph version
+4. The Dockerfile accepts `AGENSGRAPH_VERSION` as a build argument (defaults to v2.16.0)
+5. Test locally with: `docker build --build-arg AGENSGRAPH_VERSION=v2.15.0 -t agensgraph:test .`
+
+Available upstream versions include: v2.16.0 (latest), v2.15.0, v2.14.1, v2.13.1, v2.13.0, v2.12.1, v2.12.0, v2.5.0, etc.
 
 ### GitHub Actions Workflow Modifications
 - The workflow uses digest-based approach for true multiplatform images

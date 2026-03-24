@@ -11,6 +11,14 @@ The upstream AgensGraph images at [skaiworldwide/agensgraph](https://hub.docker.
 - linux/amd64
 - linux/arm64
 
+## Available Versions
+
+This repository tracks the official upstream releases from [skaiworldwide-oss/agensgraph](https://github.com/skaiworldwide-oss/agensgraph).
+
+**Current latest**: v2.16.0
+
+For all available versions, see: https://github.com/skaiworldwide-oss/agensgraph/releases
+
 ## Setup
 
 ### GitHub Actions Secrets
@@ -64,8 +72,10 @@ docker buildx build --platform linux/amd64,linux/arm64 -t agensgraph:latest .
 To build a specific AgensGraph version:
 
 ```bash
-docker build --build-arg AGENSGRAPH_VERSION=v2.17.0 -t agensgraph:v2.17.0 .
+docker build --build-arg AGENSGRAPH_VERSION=v2.15.0 -t agensgraph:v2.15.0 .
 ```
+
+**Note**: Always use official upstream versions from https://github.com/skaiworldwide-oss/agensgraph/releases
 
 ## Automated Builds
 

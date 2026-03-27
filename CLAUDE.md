@@ -80,7 +80,14 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 - **Container Images**: https://github.com/nishantapatil3/agensgraph/pkgs/container/agensgraph
 
 ### Recent Changes (2026-03-27)
-1. **Fixed workflow to support re-running jobs** (commit 5fa14a6)
+1. **Added main branch builds** (commit 0db80ed)
+   - Workflow now triggers on every commit to main branch
+   - Main branch builds use v2.16.0 as AgensGraph version
+   - Main branch images tagged as "main" and "main-<short-sha>"
+   - Version tag builds continue to tag with version number (vX.Y.Z)
+   - Enables continuous integration for every commit
+
+2. **Fixed workflow to support re-running jobs** (commit 5fa14a6)
    - Removed docker/metadata-action dependency in merge job
    - Use extracted version directly for tag creation
    - Enables re-running failed jobs from GitHub Actions UI
@@ -122,6 +129,7 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 - Added comprehensive context documentation in commit 7fbb60c
 - Retagged v2.16.0 to include all fixes
 - Fixed workflow re-run support in commit 5fa14a6 by removing metadata-action dependency
+- Added main branch builds in commit 0db80ed for continuous integration
 
 ## Key Technologies
 
@@ -159,11 +167,13 @@ The CI/CD pipeline (`build-multiplatform.yml`):
 - **GitHub Actions Cache**: Speeds up subsequent builds
 
 ### Triggers
+- **Main branch pushes**: Automatically builds on every commit to main
+  - Uses AgensGraph v2.16.0
+  - Tags as `main` and `main-<short-sha>`
 - **Version tags (v\*)**: Automatically builds matching AgensGraph version
+  - Tags as the version (e.g., `v2.16.0`)
 - **GitHub Releases**: Builds when a release is published
 - **Manual dispatch**: Can be triggered manually via Actions UI
-
-**Note**: Does NOT trigger on pushes to main to conserve CI resources.
 
 ### Permissions
 ```yaml
@@ -196,9 +206,13 @@ Required for pushing images to GitHub Container Registry (GHCR).
 - **Image Location**: `ghcr.io/nishantapatil3/agensgraph`
 - **Visibility**: Public (matches repository visibility)
 - **Tags Generated**:
-  - `vX.Y.Z` - Full semantic version only (e.g., `v2.16.0`)
-  - Only exact version tags are created (no major/minor aliases)
-  - No `latest` tag (ensures reproducible builds with explicit versions)
+  - **Main branch builds**:
+    - `main` - Always points to latest main branch build
+    - `main-<short-sha>` - Specific commit (e.g., `main-abc1234`)
+  - **Version tag builds**:
+    - `vX.Y.Z` - Full semantic version (e.g., `v2.16.0`)
+    - Only exact version tags are created (no major/minor aliases)
+  - **Manual dispatch**: Uses `v2.16.0` as fallback tag
 
 ### Docker Hub
 Docker Hub publishing has been removed from the workflow to simplify the setup. GHCR is sufficient for public distribution.
@@ -437,6 +451,28 @@ docker exec -it agensgraph-test psql -U postgres -c "SELECT version();"
 # Clean up
 docker stop agensgraph-test && docker rm agensgraph-test
 ```
+
+### Using Different Image Tags
+
+**Stable version** (recommended for production):
+```bash
+# Use a specific version tag
+docker pull ghcr.io/nishantapatil3/agensgraph:v2.16.0
+```
+
+**Latest main branch** (for testing/development):
+```bash
+# Use the main tag (always points to latest main)
+docker pull ghcr.io/nishantapatil3/agensgraph:main
+
+# Or use a specific commit
+docker pull ghcr.io/nishantapatil3/agensgraph:main-abc1234
+```
+
+**Best practices**:
+- Production: Always use specific version tags (e.g., `v2.16.0`)
+- Development: Use `main` tag for latest features
+- Debugging: Use `main-<sha>` tag to pin to specific commits
 
 ### Triggering Manual Build
 ```bash

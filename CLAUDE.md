@@ -72,12 +72,12 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 ### Released Versions
 - **v2.16.0**: Initial release with multiplatform support (linux/amd64, linux/arm64)
   - Currently building after re-tagging with latest changes
-  - Build run: https://github.com/pinaka-io/agensgraph/actions/runs/23505661585
+  - Build run: https://github.com/nishantapatil3/agensgraph/actions/runs/23505661585
 
 ### Repository
-- **Organization**: https://github.com/pinaka-io
-- **Repository**: https://github.com/pinaka-io/agensgraph
-- **Container Images**: https://github.com/pinaka-io/agensgraph/pkgs/container/agensgraph
+- **Organization**: https://github.com/nishantapatil3
+- **Repository**: https://github.com/nishantapatil3/agensgraph
+- **Container Images**: https://github.com/nishantapatil3/agensgraph/pkgs/container/agensgraph
 
 ### Recent Changes (2026-03-24)
 1. **Simplified Docker tags** (latest)
@@ -184,7 +184,7 @@ Required for pushing images to GitHub Container Registry (GHCR).
 
 ### GitHub Container Registry (GHCR)
 - **Authentication**: Automatically configured via `GITHUB_TOKEN`
-- **Image Location**: `ghcr.io/pinaka-io/agensgraph`
+- **Image Location**: `ghcr.io/nishantapatil3/agensgraph`
 - **Visibility**: Public (matches repository visibility)
 - **Tags Generated**:
   - `vX.Y.Z` - Full semantic version only (e.g., `v2.16.0`)
@@ -345,13 +345,13 @@ task help              # Detailed help
 
 3. **Monitor the build**:
    ```bash
-   gh run watch --repo pinaka-io/agensgraph
+   gh run watch --repo nishantapatil3/agensgraph
    ```
 
 4. **Verify the image**:
    ```bash
-   docker pull ghcr.io/pinaka-io/agensgraph:v2.15.0
-   docker run --rm ghcr.io/pinaka-io/agensgraph:v2.15.0 agens --version
+   docker pull ghcr.io/nishantapatil3/agensgraph:v2.15.0
+   docker run --rm ghcr.io/nishantapatil3/agensgraph:v2.15.0 agens --version
    ```
 
 ### Building Locally
@@ -414,7 +414,7 @@ task stop               # Clean up
 docker run -d --name agensgraph-test \
   -e POSTGRES_PASSWORD=testpass \
   -p 5432:5432 \
-  ghcr.io/pinaka-io/agensgraph:v2.16.0
+  ghcr.io/nishantapatil3/agensgraph:v2.16.0
 
 # Check logs
 docker logs agensgraph-test
@@ -432,23 +432,23 @@ docker stop agensgraph-test && docker rm agensgraph-test
 ### Triggering Manual Build
 ```bash
 # Via GitHub CLI
-gh workflow run build-multiplatform.yml --repo pinaka-io/agensgraph
+gh workflow run build-multiplatform.yml --repo nishantapatil3/agensgraph
 
 # Or via web UI:
-# https://github.com/pinaka-io/agensgraph/actions/workflows/build-multiplatform.yml
+# https://github.com/nishantapatil3/agensgraph/actions/workflows/build-multiplatform.yml
 # Click "Run workflow"
 ```
 
 ### Checking Build Status
 ```bash
 # List recent runs
-gh run list --repo pinaka-io/agensgraph --limit 5
+gh run list --repo nishantapatil3/agensgraph --limit 5
 
 # Watch a specific run
-gh run watch <run-id> --repo pinaka-io/agensgraph
+gh run watch <run-id> --repo nishantapatil3/agensgraph
 
 # View logs for failed run
-gh run view <run-id> --repo pinaka-io/agensgraph --log-failed
+gh run view <run-id> --repo nishantapatil3/agensgraph --log-failed
 ```
 
 ### Managing Tags

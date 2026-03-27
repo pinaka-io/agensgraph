@@ -6,7 +6,7 @@ vars:
     sh: git describe --tags --always --dirty
   AGENSGRAPH_VERSION: v2.16.0
   PLATFORMS: linux/amd64,linux/arm64
-  REGISTRY: ghcr.io/pinaka-io
+  REGISTRY: ghcr.io/nishantapatil3
 
 tasks:
   default:
@@ -186,12 +186,12 @@ tasks:
   check:builds:
     desc: Check GitHub Actions build status
     cmds:
-      - gh run list --repo pinaka-io/agensgraph --limit 5
+      - gh run list --repo nishantapatil3/agensgraph --limit 5
 
   watch:build:
     desc: Watch the latest GitHub Actions build
     cmds:
-      - gh run watch --repo pinaka-io/agensgraph
+      - gh run watch --repo nishantapatil3/agensgraph
 
   help:
     desc: Show detailed help

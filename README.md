@@ -1,6 +1,6 @@
 # AgensGraph Multiplatform Images
 
-[![Build Status](https://github.com/pinaka-io/agensgraph/actions/workflows/build-multiplatform.yml/badge.svg)](https://github.com/pinaka-io/agensgraph/actions/workflows/build-multiplatform.yml)
+[![Build Status](https://github.com/nishantapatil3/agensgraph/actions/workflows/build-multiplatform.yml/badge.svg)](https://github.com/nishantapatil3/agensgraph/actions/workflows/build-multiplatform.yml)
 
 Multiplatform Docker images for [AgensGraph](https://github.com/skaiworldwide-oss/agensgraph), a graph database extension for PostgreSQL.
 
@@ -17,12 +17,12 @@ The upstream AgensGraph images at [skaiworldwide/agensgraph](https://hub.docker.
 
 ```bash
 # Pull and run the latest version
-docker pull ghcr.io/pinaka-io/agensgraph:v2.16.0
+docker pull ghcr.io/nishantapatil3/agensgraph:v2.16.0
 docker run -d \
   --name agensgraph \
   -e POSTGRES_PASSWORD=mysecretpassword \
   -p 5432:5432 \
-  ghcr.io/pinaka-io/agensgraph:v2.16.0
+  ghcr.io/nishantapatil3/agensgraph:v2.16.0
 
 # Connect with psql
 docker exec -it agensgraph psql -U postgres
@@ -34,7 +34,7 @@ This repository tracks official upstream releases from [skaiworldwide-oss/agensg
 
 **Current latest**: v2.16.0
 
-All released images: [ghcr.io/pinaka-io/agensgraph](https://github.com/pinaka-io/agensgraph/pkgs/container/agensgraph)
+All released images: [ghcr.io/nishantapatil3/agensgraph](https://github.com/nishantapatil3/agensgraph/pkgs/container/agensgraph)
 
 ## Usage
 
@@ -42,10 +42,10 @@ All released images: [ghcr.io/pinaka-io/agensgraph](https://github.com/pinaka-io
 
 ```bash
 # Specific version (recommended)
-docker pull ghcr.io/pinaka-io/agensgraph:v2.16.0
+docker pull ghcr.io/nishantapatil3/agensgraph:v2.16.0
 
 # Or get the latest
-docker pull ghcr.io/pinaka-io/agensgraph:latest
+docker pull ghcr.io/nishantapatil3/agensgraph:latest
 ```
 
 ### Run AgensGraph
@@ -55,7 +55,7 @@ docker run -d \
   --name agensgraph \
   -e POSTGRES_PASSWORD=mysecretpassword \
   -p 5432:5432 \
-  ghcr.io/pinaka-io/agensgraph:v2.16.0
+  ghcr.io/nishantapatil3/agensgraph:v2.16.0
 ```
 
 ### Connect to AgensGraph
@@ -153,7 +153,7 @@ Images are automatically built and published via GitHub Actions:
 **Tags Created:**
 - `vX.Y.Z` - Full semantic version only (e.g., `v2.16.0`)
 
-Check build status: [GitHub Actions](https://github.com/pinaka-io/agensgraph/actions)
+Check build status: [GitHub Actions](https://github.com/nishantapatil3/agensgraph/actions)
 
 ## Repository Structure
 
@@ -182,10 +182,10 @@ Check build status: [GitHub Actions](https://github.com/pinaka-io/agensgraph/act
 
 ## Links
 
-- **Images**: [ghcr.io/pinaka-io/agensgraph](https://github.com/pinaka-io/agensgraph/pkgs/container/agensgraph)
-- **Source**: [github.com/pinaka-io/agensgraph](https://github.com/pinaka-io/agensgraph)
+- **Images**: [ghcr.io/nishantapatil3/agensgraph](https://github.com/nishantapatil3/agensgraph/pkgs/container/agensgraph)
+- **Source**: [github.com/nishantapatil3/agensgraph](https://github.com/nishantapatil3/agensgraph)
 - **Upstream**: [github.com/skaiworldwide-oss/agensgraph](https://github.com/skaiworldwide-oss/agensgraph)
-- **Build Status**: [GitHub Actions](https://github.com/pinaka-io/agensgraph/actions)
+- **Build Status**: [GitHub Actions](https://github.com/nishantapatil3/agensgraph/actions)
 
 ## License
 

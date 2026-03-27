@@ -79,8 +79,16 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 - **Repository**: https://github.com/nishantapatil3/agensgraph
 - **Container Images**: https://github.com/nishantapatil3/agensgraph/pkgs/container/agensgraph
 
-### Recent Changes (2026-03-24)
-1. **Simplified Docker tags** (latest)
+### Recent Changes (2026-03-27)
+1. **Fixed workflow to support re-running jobs** (commit 5fa14a6)
+   - Removed docker/metadata-action dependency in merge job
+   - Use extracted version directly for tag creation
+   - Enables re-running failed jobs from GitHub Actions UI
+   - Works for both tag-based and manual workflow triggers
+   - Fixes "ERROR: can't push with no tags specified"
+
+### Previous Changes (2026-03-24)
+1. **Simplified Docker tags**
    - Only generate full semantic version tags (vX.Y.Z)
    - Removed major/minor aliases (vX.Y, vX) for clarity
    - Removed latest tag to ensure explicit versioning
@@ -113,6 +121,7 @@ This repository builds and publishes multiplatform Docker images for AgensGraph,
 - Made version dynamic based on Git tags in commit 5075f02
 - Added comprehensive context documentation in commit 7fbb60c
 - Retagged v2.16.0 to include all fixes
+- Fixed workflow re-run support in commit 5fa14a6 by removing metadata-action dependency
 
 ## Key Technologies
 
@@ -438,6 +447,11 @@ gh workflow run build-multiplatform.yml --repo nishantapatil3/agensgraph
 # https://github.com/nishantapatil3/agensgraph/actions/workflows/build-multiplatform.yml
 # Click "Run workflow"
 ```
+
+**Note**: You can also re-run failed jobs from the GitHub Actions UI. The workflow will:
+- Use the version from the Git tag if triggered by a tag push
+- Fallback to `v2.16.0` if triggered manually or re-run from main branch
+- This makes it safe to test workflow changes without creating version tags
 
 ### Checking Build Status
 ```bash
